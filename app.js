@@ -50,8 +50,12 @@ app.use(
     store,
     secret: "this is my secret",
     resave: false,
-    saveUninitialized: true,
-    cookie: { httpOnly: true },
+    saveUninitialized: false,
+    cookie: { 
+      httpOnly: true,
+      secure:true,
+      sameSite:"none"
+     },
   })
 );
 
