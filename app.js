@@ -18,12 +18,6 @@
   const mongourl = process.env.MONGODB_URL;
 
 
-  app.use(
-    cors({
-      origin: process.env.FRONTEND_BASE_URL,
-      credentials: true,
-    })
-  );
 
   main()
     .then(() => {
@@ -34,15 +28,36 @@
   async function main() {
     await mongoose.connect(mongourl);
   }
-
-
-  const store = MongoStore.create({
+   const store = MongoStore.create({
     mongoUrl: mongourl,
     crypto: {
       secret: "this is my strong secret",
     },
     touchAfter: 24 * 3600,
   });
+
+  app.use(
+    session({
+      store,
+      secret: "this is my secret",
+      resave: false,
+      saveUninitialized: false,
+      cookie: { 
+        httpOnly: true,
+        secure: process.env.NODE_ENV==="production",   
+        sameSite: process.env.NODE_ENV==="production" ? "none":"lax", 
+      },
+    })
+  );
+
+
+  app.use(
+    cors({
+      origin: process.env.FRONTEND_BASE_URL,
+      credentials: true,
+    })
+  );
+ 
 
   store.on("error", (err) => {
     console.log("MONGO SESSION ERRORS ", err);
@@ -54,20 +69,6 @@
 
   
 
-
-  app.use(
-    session({
-      store,
-      secret: "this is my secret",
-      resave: false,
-      saveUninitialized: false,
-      cookie: { 
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",   
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
-      },
-    })
-  );
 
   app.use(passport.initialize());
   app.use(passport.session());
