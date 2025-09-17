@@ -28,6 +28,15 @@
   async function main() {
     await mongoose.connect(mongourl);
   }
+  
+  app.use(
+    cors({
+      origin: process.env.FRONTEND_BASE_URL,
+      credentials: true,
+    })
+  );
+
+
    const store = MongoStore.create({
     mongoUrl: mongourl,
     crypto: {
@@ -36,12 +45,13 @@
     touchAfter: 24 * 3600,
   });
 
+
   app.use(
     session({
       store,
       secret: "this is my secret",
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
       cookie: { 
         httpOnly: true,
         secure: process.env.NODE_ENV==="production",   
@@ -51,12 +61,6 @@
   );
 
 
-  app.use(
-    cors({
-      origin: process.env.FRONTEND_BASE_URL,
-      credentials: true,
-    })
-  );
  
 
   store.on("error", (err) => {
