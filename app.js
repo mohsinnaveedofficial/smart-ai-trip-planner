@@ -45,7 +45,7 @@
     touchAfter: 24 * 3600,
   });
 
-
+app.set("trust proxy", 1);
   app.use(
     session({
       store,
