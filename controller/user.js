@@ -30,9 +30,23 @@ export const signUp = async (req, res) => {
   });
 };
 
-export const logIn = (req, res) => {
-  res.send({ message: "successfully login ", user: req.user, loggedIn: true });
+export const logIn = (req, res, next) => {
+  req.logIn(req.user, (err) => {
+    if (err) return next(err);
+
+    // Ensure session is saved before sending response
+    req.session.save((err) => {
+      if (err) return next(err);
+
+      res.json({
+        message: "successfully login",
+        user: req.user,
+        loggedIn: true,
+      });
+    });
+  });
 };
+
 
 export const loginFailed = (req, res) => {
   res.status(401).json({
