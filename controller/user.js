@@ -30,11 +30,7 @@ export const signUp = async (req, res) => {
   });
 };
 
-export const logIn = (req, res) => {
-  console.log("Session after login:", req.session);
- req.session.user = { id: 123, name: "test" };
- console.log(req.session)
- 
+export const logIn = (req, res) => { 
   res.send({ message: "successfully login ", user: req.user, loggedIn: true });
 };  
 
