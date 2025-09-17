@@ -34,7 +34,7 @@ export const newtrip = async (req, res) => {
           throw new ExpressError(400,"The date is inValid or incorrect")
    }
 
-   if(inputDate<=todaydate){
+   if(inputDate < todaydate){
     throw new ExpressError(400,"Date must be greater than today")
    }
   
